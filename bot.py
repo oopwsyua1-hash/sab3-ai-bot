@@ -23,14 +23,9 @@ def get_ai_answer(text):
 def reply(message):
     bot.reply_to(message, get_ai_answer(message.text))
 
-@server.route('/' + TOKEN, methods=['POST'])
-def getMessage():
-    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
-    return "!", 200
-
-@server.route("/")
-def webhook():
-    return "The Sab3-Bot is Live!", 200
-
+# هذا السطر سيجعل البوت يعمل فوراً وببساطة
 if __name__ == "__main__":
+    bot.remove_webhook() # لحذف أي ارتباط قديم
+    bot.infinity_polling() # للبدء في استقبال الرسائل
+
     server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
