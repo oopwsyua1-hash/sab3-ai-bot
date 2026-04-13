@@ -1,31 +1,35 @@
 import telebot
 import requests
 import os
-from flask import Flask, request
 
 # بياناتك
-TOKEN = "8610905655:AAHdWXdDEobIshF_VWiZdDosLgQcpND_vlM"
-API_KEY = "AIzaSyCnwNCe18cD_xMGb-BabcCJmT0cbDIKZuY"
+TOKEN = "8610905655:AAHdWXdDEobIshF_VWiZdN0hD5USC5bhSXo"
+API_KEY = "AizaSyCnwNCe18cD_xMGb-BabcJMToCbDIKZuY"
+
 bot = telebot.TeleBot(TOKEN)
-server = Flask(__name__)
 
 def get_ai_answer(text):
-    # استخدام المسار المستقر v1beta لتجنب خطأ الموديل
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={API_KEY}"
-    data = {"contents": [{"parts": [{"text": text}]}]}
+    # الرابط المحدث والمدعوم حالياً
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
+    
+    data = {
+        "contents": [{"parts": [{"text": text}]}]
+    }
+    
     try:
         response = requests.post(url, json=data, timeout=30)
-        return response.json()['candidates'][0]['content']['parts'][0]['text']
-    except:
-        return "السبع يرحب بك.. السيرفر مشغول قليلاً."
+        result = response.json()
+        # استخراج النص من استجابة جوجل
+        return result['candidates'][0]['content']['parts'][0]['text']
+    except Exception as e:
+        return "السبع يرحب بك.. حدث خطأ في الاتصال بالذكاء الاصطناعي."
 
 @bot.message_handler(func=lambda message: True)
 def reply(message):
-    bot.reply_to(message, get_ai_answer(message.text))
+    answer = get_ai_answer(message.text)
+    bot.reply_to(message, answer)
 
-# هذا السطر سيجعل البوت يعمل فوراً وببساطة
 if __name__ == "__main__":
-    bot.remove_webhook() # لحذف أي ارتباط قديم
-    bot.infinity_polling() # للبدء في استقبال الرسائل
-
-    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+    print("السبع بدأ بالعمل...")
+    bot.remove_webhook()
+    bot.infinity_polling()
