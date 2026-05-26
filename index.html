@@ -2,283 +2,93 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AETERNA CYBER ANALYTICS | الخال قصي VIP</title>
+    <title>منظومة الخال قصي | CYBER COMMAND OS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --bg-dark: #05070b;
-            --panel-bg: #0b0f17;
-            --terminal-bg: #030508;
-            --neon-blue: #007aff;
-            --neon-green: #00e676;
-            --neon-red: #ff3b30;
-            --text-gold: #ffcc00;
-            --text-light: #ffffff;
-            --text-dim: #4f5e75;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace, system-ui; }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            background-image: linear-gradient(rgba(0, 122, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 122, 255, 0.02) 1px, transparent 1px);
-            background-size: 25px 25px;
-            padding-bottom: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
-        }
-
-        /* الهيدر العلوي */
-        .cyber-header {
-            width: 100%; max-width: 480px; background: #080b11; padding: 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 2px solid #121824; box-shadow: 0 2px 15px rgba(0,0,0,0.5);
-        }
-        .header-title { font-weight: bold; font-size: 1.1rem; color: var(--neon-blue); letter-spacing: 1px; }
-        .dev-badge { font-size: 0.8rem; color: var(--neon-green); background: rgba(0,230,118,0.07); padding: 6px 12px; border-radius: 4px; border: 1px solid rgba(0,230,118,0.2); font-weight: bold; }
-
-        .main-container { width: 100%; max-width: 480px; padding: 12px; }
-
-        /* شاشة التيرمنال اليدوية السريعة */
-        .terminal-box {
-            background: var(--terminal-bg); border: 1px solid #162030; border-radius: 8px;
-            padding: 12px; margin-bottom: 15px; font-size: 0.8rem; direction: ltr; text-align: left;
-            position: relative; overflow: hidden; box-shadow: inset 0 0 15px rgba(0,230,118,0.05);
-        }
-        .terminal-box::before {
-            content: "SECURE NODE // TERMINAL"; position: absolute; top: 2px; right: 8px;
-            font-size: 0.6rem; color: var(--text-dim); font-weight: bold;
-        }
-        .log-line { margin-bottom: 4px; word-break: break-all; }
-        .log-info { color: var(--neon-blue); }
-        .log-success { color: var(--neon-green); }
-        .log-warn { color: var(--text-gold); }
-
-        /* قسم لوحة الفحص وكسر التشفير */
-        .decrypt-panel {
-            background: var(--panel-bg); border: 1px solid #1a2436; border-radius: 12px;
-            padding: 20px 15px; margin-bottom: 15px; position: relative;
-        }
-        .panel-tag { position: absolute; top: -10px; right: 15px; background: var(--neon-blue); color: white; font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+        :root { --main-gold: #ffd700; --deep-black: #050505; --cyber-green: #00ff41; --glass: rgba(255,255,255,0.05); }
+        body { background: var(--deep-black); color: #fff; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding-bottom: 70px; }
         
-        /* العداد الرقمي المطور للطيارة */
-        .live-status-container {
-            display: flex; align-items: center; justify-content: space-between;
-            background: #05070a; padding: 15px; border-radius: 8px; border: 1px solid #172132; margin-bottom: 15px;
-        }
-        .live-multiplier { font-size: 2.3rem; font-weight: bold; color: var(--text-light); text-shadow: 0 0 10px rgba(255,255,255,0.2); }
-        .live-multiplier.flew { color: var(--neon-red); text-shadow: 0 0 10px rgba(255,59,48,0.4); }
+        /* الهيدر الاحترافي */
+        .header { background: #111; padding: 20px; border-bottom: 2px solid var(--cyber-green); text-align: center; }
+        .header h1 { color: var(--main-gold); margin: 0; font-size: 1.5rem; text-transform: uppercase; }
+        .status-bar { font-size: 0.7rem; color: var(--cyber-green); margin-top: 5px; }
 
-        /* سجل الجولات السابقة التكتيكي */
-        .history-grid { display: flex; gap: 8px; justify-content: center; overflow-x: auto; padding: 5px 0 15px; }
-        .history-badge { background: #111722; border: 1px solid #1c273a; color: #a4b3cc; font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; font-weight: bold; min-width: 55px; text-align: center; }
-
-        /* حقول الإدخال والتحقق */
-        .input-group { margin-bottom: 15px; text-align: right; }
-        .input-label { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 6px; display: block; }
-        .input-label i { margin-left: 5px; color: var(--neon-blue); }
+        /* منطقة التحكم */
+        .control-panel { padding: 15px; }
+        .module-card { background: var(--glass); border: 1px solid #333; padding: 20px; border-radius: 15px; margin-bottom: 15px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 15px; }
+        .module-card:hover { border-color: var(--main-gold); transform: scale(1.02); }
+        .module-icon { font-size: 1.8rem; color: var(--main-gold); }
         
-        .cyber-input {
-            width: 100%; padding: 14px; background: #04060a; border: 1px solid #202d42;
-            color: var(--text-light); border-radius: 6px; font-size: 1rem; text-align: center;
-            outline: none; font-weight: bold; letter-spacing: 1px; transition: 0.2s;
-        }
-        .cyber-input:focus { border-color: var(--neon-blue); box-shadow: 0 0 8px rgba(0,122,255,0.2); }
-
-        .promo-display {
-            background: rgba(255, 204, 0, 0.04); border: 1px dashed var(--text-gold);
-            padding: 12px; border-radius: 6px; font-size: 1.2rem; font-weight: bold;
-            color: var(--text-gold); text-align: center; letter-spacing: 2px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
-        /* زر البدء الضخم */
-        .action-btn {
-            background: linear-gradient(135deg, #0052b3, var(--neon-blue));
-            color: white; border: none; padding: 16px; width: 100%; border-radius: 8px;
-            font-size: 1rem; font-weight: bold; cursor: pointer; letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(0,122,255,0.25); transition: 0.2s;
-        }
-        .action-btn:active { transform: scale(0.98); opacity: 0.9; }
-
-        /* تأثيرات محاكاة الاختراق العائمة (Overlay) */
-        .overlay-screen {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(3, 5, 8, 0.96); z-index: 9999; max-width: 480px; left: 50%; transform: translateX(-50%);
-            padding: 25px 15px; direction: ltr; text-align: left; box-sizing: border-box;
-        }
-        .matrix-text { font-family: monospace; font-size: 0.75rem; color: var(--neon-green); height: 80%; overflow-y: hidden; margin-bottom: 20px; line-height: 1.4; }
+        /* نافذة المعالجة */
+        #processOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; padding: 20px; }
+        .terminal-box { background: #000; border: 1px solid var(--cyber-green); height: 80%; overflow-y: auto; padding: 15px; font-family: monospace; color: var(--cyber-green); }
+        
+        /* القائمة السفلية */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
     </style>
 </head>
 <body>
 
-    <div class="cyber-header">
-        <div class="header-title"><i class="fa-solid fa-shield-halved"></i> AETERNA INTERCEPTOR</div>
-        <div class="dev-badge"><i class="fa-solid fa-user-secret"></i> المطور الخال قصي VIP</div>
+    <div class="header">
+        <h1><i class="fa-solid fa-user-secret"></i> منظومة الخال قصي VIP</h1>
+        <div class="status-bar" id="liveStatus">نظام الحماية: مفعل | حالة السيرفر: متصل</div>
     </div>
 
-    <div class="main-container">
-
-        <div class="terminal-box" id="terminalLogs">
-            <div class="log-line log-info">[SYSTEM] Initializing cloud matrix tunnel...</div>
-            <div class="log-line log-success">[AUTH] Handshake verified with secure node.</div>
-            <div class="log-line log-warn">[HASH] DB signature active on layer 7.</div>
+    <div class="control-panel">
+        <div class="module-card" onclick="runProcess('فحص الثغرات البرمجية')">
+            <div class="module-icon"><i class="fa-solid fa-bug"></i></div>
+            <div>
+                <h3>تحليل واكتشاف الثغرات</h3>
+                <p style="font-size: 0.8rem; opacity: 0.7;">مسح شامل لثغرات النظام المتقدمة</p>
+            </div>
         </div>
 
-        <div class="decrypt-panel">
-            <div class="panel-tag">LIVE SIGNATURE REALTIME</div>
-
-            <div class="live-status-container">
-                <div>
-                    <div style="font-size: 0.65rem; color: var(--text-dim); font-weight: bold; margin-bottom: 2px; text-align: right;">ROUND DATA STREAM</div>
-                    <div style="font-size: 0.8rem; color: var(--neon-green); font-weight: bold; display: flex; align-items: center; gap: 5px;" id="statusText">
-                        <i class="fa-solid fa-satellite-dish"></i> CONNECTED
-                    </div>
-                </div>
-                <div class="live-multiplier" id="crashCounter">1.00x</div>
+        <div class="module-card" onclick="runProcess('تشفير البيانات')">
+            <div class="module-icon"><i class="fa-solid fa-lock"></i></div>
+            <div>
+                <h3>فك وتوليد التشفير</h3>
+                <p style="font-size: 0.8rem; opacity: 0.7;">معالجة خوارزميات AES و SHA</p>
             </div>
-
-            <div class="history-grid" id="historyGrid">
-                <div class="history-badge">4.12x</div>
-                <div class="history-badge">3.80x</div>
-                <div class="history-badge">3.44x</div>
-                <div class="history-badge">3.76x</div>
-                <div class="history-badge">1.82x</div>
-                <div class="history-badge">2.34x</div>
-            </div>
-
-            <div class="input-group">
-                <span class="input-label"><i class="fa-solid fa-key"></i> نظام التحقق من البروموكود التفاعلي</span>
-                <div class="promo-display">
-                    <span>KAJ0117</span>
-                    <i class="fa-regular fa-copy" style="cursor: pointer; font-size: 1.1rem;" onclick="navigator.clipboard.writeText('KAJ0117'); alert('تم نسخ رمز التحقق المعتمد KAJ0117')"></i>
-                </div>
-            </div>
-
-            <div class="input-group">
-                <span class="input-label"><i class="fa-solid fa-fingerprint"></i> معرف الحساب المستهدف (ID المكون من 9 أرقام)</span>
-                <input type="number" class="cyber-input" id="accountIdInput" placeholder="000000000">
-            </div>
-
-            <button class="action-btn" onclick="triggerCyberCrack()">
-                <i class="fa-solid fa-terminal" style="margin-left: 8px;"></i> INITIALIZE LIVE SOCKET LINK & DATA STREAM
-            </button>
         </div>
 
+        <div class="module-card" onclick="runProcess('التحكم عن بعد')">
+            <div class="module-icon"><i class="fa-solid fa-terminal"></i></div>
+            <div>
+                <h3>وحدة التحكم العكسي</h3>
+                <p style="font-size: 0.8rem; opacity: 0.7;">إنشاء قناة اتصال مشفرة مع الهدف</p>
+            </div>
+        </div>
     </div>
 
-    <div class="overlay-screen" id="overlayCrack">
-        <div class="matrix-text" id="matrixConsole"></div>
-        <div style="text-align: center;">
-            <span style="color: var(--text-gold); font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 15px;" id="loadingText">جاري فحص وتخطي طبقات الحماية وتأكيد المزامنة...</span>
-        </div>
+    <div id="processOverlay">
+        <h2 style="color: var(--main-gold);">جاري تنفيذ العملية...</h2>
+        <div class="terminal-box" id="termOutput"></div>
+        <button onclick="document.getElementById('processOverlay').style.display='none'" style="margin-top:10px; width:100%; padding:10px; background:red; border:none; color:white;">إنهاء العملية</button>
+    </div>
+
+    <div class="bottom-nav">
+        <i class="fa-solid fa-house"></i>
+        <i class="fa-solid fa-shield-halved"></i>
+        <i class="fa-solid fa-gear"></i>
     </div>
 
     <script>
-        // محاكاة حية وتلقائية لشاشة الـ Terminal بالخلفية لتبدو حقيقية جداً
-        const logsContainer = document.getElementById('terminalLogs');
-        const simulatedLogs = [
-            { text: "[INFO] Fetching current session state tokens...", type: "log-info" },
-            { text: "[OK] Packets aligned on port 8443 successfully.", type: "log-success" },
-            { text: "[WARN] Jitter detected: 12ms. Realignment initialized.", type: "log-warn" },
-            { text: "[SYNC] Memory offset injected at 0x7FFA83BC.", type: "log-info" },
-            { text: "[OK] Node handshake updated dynamically.", type: "log-success" }
-        ];
-        
-        setInterval(() => {
-            let randomLog = simulatedLogs[Math.floor(Math.random() * simulatedLogs.length)];
-            let newLine = document.createElement('div');
-            newLine.className = `log-line ${randomLog.type}`;
-            newLine.innerText = randomLog.text;
-            logsContainer.appendChild(newLine);
-            if (logsContainer.children.length > 5) {
-                logsContainer.removeChild(logsContainer.children[0]);
-            }
-        }, 3500);
-
-        // محاكاة عداد الطيارة المزامَن الحركي التلقائي
-        const crashCounter = document.getElementById('crashCounter');
-        const statusText = document.getElementById('statusText');
-        const historyGrid = document.getElementById('historyGrid');
-
-        function runLiveCrashEngine() {
-            let current = 1.00;
-            let limit = (Math.random() * (4.80 - 1.15) + 1.15).toFixed(2);
-            crashCounter.classList.remove('flew');
-            statusText.innerHTML = '<i class="fa-solid fa-satellite-dish"></i> CONNECTED';
-            statusText.style.color = "var(--neon-green)";
-
-            let interval = setInterval(() => {
-                if (current >= limit) {
-                    clearInterval(interval);
-                    crashCounter.innerText = "FLEW AWAY! " + current.toFixed(2) + "x";
-                    crashCounter.classList.add('flew');
-                    statusText.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> DISCONNECTED';
-                    statusText.style.color = "var(--neon-red)";
-                    
-                    // إضافة الجولة الفائتة للسجل تلقائياً
-                    let newBadge = document.createElement('div');
-                    newBadge.className = 'history-badge';
-                    newBadge.innerText = current.toFixed(2) + "x";
-                    historyGrid.insertBefore(newBadge, historyGrid.firstChild);
-                    if(historyGrid.children.length > 6) historyGrid.removeChild(historyGrid.lastChild);
-
-                    setTimeout(runLiveCrashEngine, 3000);
-                } else {
-                    current += 0.05;
-                    crashCounter.innerText = current.toFixed(2) + "x";
-                }
-            }, 65);
-        }
-        runLiveCrashEngine();
-
-        // محاكاة واجهة الاختراق الكبرى (كسر كلمات السر وتخطي الجدران النارية واهمياً)
-        function triggerCyberCrack() {
-            let idVal = document.getElementById('accountIdInput').value;
-            if(idVal.trim().length < 8) {
-                alert("الرجاء إدخال معرف ID صالح (مكون من 8 إلى 12 رقم) لبدء بناء النفق السحابي!");
-                return;
-            }
-
-            const overlay = document.getElementById('overlayCrack');
-            const consoleBox = document.getElementById('matrixConsole');
-            const loadText = document.getElementById('loadingText');
+        function runProcess(name) {
+            const overlay = document.getElementById('processOverlay');
+            const term = document.getElementById('termOutput');
+            overlay.style.display = 'block';
+            term.innerHTML = `> بدأت عملية: ${name}<br>> جاري الاتصال بالخادم الرئيسي...<br>`;
             
-            overlay.style.display = "block";
-            consoleBox.innerHTML = "";
-            loadText.innerText = "جاري تفعيل الاتصال عبر خادم المطور الخال قصي VIP...";
-
-            let steps = [
-                `INITIALIZING BRUTE-FORCE DECRYPT ENGINE ON ID: ${idVal}...`,
-                "CONNECTING TO INSTANCE SATELLITE: BURSA-TURKEY-NODE-1...",
-                "STATUS: 200 OK - TARGET SERVER ACKNOWLEDGED.",
-                "BYPASSING SECURE LAYER 4 FIREWALL ROUTE... [SUCCESS]",
-                "DECRYPTING SEED HASH: SHA-256 [7a8b9c2d1e0f394a5b6c]",
-                "EXTRACTING ACTIVE MEMORY BUFFER BLOCKS...",
-                "INJECTING PACKETS INTO MAIN LOOP BUFFER... DONE.",
-                "STABILIZING WIRELESS CLOUD EMULATOR FOR PHONES...",
-                "VERIFYING LICENSE AND VIP ACCESS GRANTED BY 'AL-KHAL QUSAI'...",
-                "CONNECTION SYNCED 100% // REDIRECTING STREAM TO MAIN DASHBOARD."
-            ];
-
-            let index = 0;
-            let textTimer = setInterval(() => {
-                if (index < steps.length) {
-                    consoleBox.innerHTML += `<div><span style="color:#00e676;">[~]</span> ${steps[index]}</div>`;
-                    index++;
-                } else {
-                    clearInterval(textTimer);
-                    loadText.innerHTML = "<span style='color:#00e676;'>✓ تم تأكيد الربط الرقمي المتقدم بنجاح!</span>";
-                    setTimeout(() => {
-                        overlay.style.display = "none";
-                        alert("تمت المزامنة وحقن الحزم بنجاح في الواجهة السحابية التفاعلية.");
-                    }, 1500);
+            let count = 0;
+            let interval = setInterval(() => {
+                count++;
+                term.innerHTML += `> [${count}%] جاري معالجة البيانات وتحليل الحزم...<br>`;
+                if(count >= 100) {
+                    clearInterval(interval);
+                    term.innerHTML += `<span style="color:white;">> تم الإنجاز بنجاح يا خال!</span>`;
                 }
-            }, 450);
+                term.scrollTop = term.scrollHeight;
+            }, 100);
         }
     </script>
 </body>
