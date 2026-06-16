@@ -1,36 +1,42 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <style>
-        body { background: #0b2e13; color: white; text-align: center; font-family: sans-serif; }
-        .circle { position: relative; width: 350px; height: 350px; margin: 50px auto; border: 2px dashed #4caf50; border-radius: 50%; }
-        .timer { position: absolute; top: 40%; left: 35%; font-size: 50px; font-weight: bold; color: yellow; }
-        .t-btn { position: absolute; background: #1a5a28; border: 2px solid #555; padding: 10px; border-radius: 50%; width: 70px; height: 70px; cursor: pointer; }
-        .coins { position: fixed; bottom: 20px; width: 100%; display: flex; justify-content: center; gap: 10px; }
-    </style>
-</head>
-<body>
-    <div class="circle">
-        <div class="timer" id="timer">31s</div>
-        <button class="t-btn" style="top:0; left:40%" onclick="bet('ريال')">ريال<br>x40</button>
-        <button class="t-btn" style="top:20%; right:10%" onclick="bet('برشلونة')">برشلونة<br>x40</button>
-        <button class="t-btn" style="bottom:20%; right:10%" onclick="bet('باريس')">باريس<br>x12</button>
-        <button class="t-btn" style="bottom:0; left:40%" onclick="bet('ليفربول')">ليفربول<br>x12</button>
-        <button class="t-btn" style="bottom:20%; left:10%" onclick="bet('ميلان')">ميلان<br>x6</button>
-        <button class="t-btn" style="top:20%; left:10%" onclick="bet('بايرن')">بايرن<br>x6</button>
-        <button class="t-btn" style="top:40%; right:-5%" onclick="bet('يوفنتوس')">يوفي<br>x4</button>
-        <button class="t-btn" style="top:40%; left:-5%" onclick="bet('يونايتد')">يونايتد<br>x4</button>
-    </div>
-    <div class="coins">
-        <button onclick="set(10000)">10000</button> <button onclick="set(50000)">50000</button> <button onclick="set(100000)">100000</button>
-    </div>
-    <script>
-        let amt = 0;
-        function set(a) { amt = a; }
-        function bet(t) { fetch('/bet', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({team:t, amount:amt})}).then(r=>r.json()).then(d=>alert(d.status)); }
-        setInterval(() => {
-            fetch('/data').then(r=>r.json()).then(d => { document.getElementById('timer').innerText = d.timer + 's'; });
-        }, 1000);
-    </script>
-</body>
-</html>
+<script>
+let selectedTeam = null;
+let timer = 31;
+
+document.querySelectorAll('.team').forEach(t => {
+  t.onclick = () => {
+    document.querySelectorAll('.team').forEach(x => x.classList.remove('selected'));
+    t.classList.add('selected');
+    selectedTeam = t.querySelector('img').alt || 'team';
+  }
+});
+
+document.querySelectorAll('.bet-btn').forEach(btn => {
+  btn.onclick = async () => {
+    if(!selectedTeam) return alert('اختار فريق أول');
+    let amount = parseInt(btn.textContent.replace(/\D/g,''));
+
+    let res = await fetch('/api/bet', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({team: selectedTeam, amount})
+    });
+    let data = await res.json();
+
+    if(data.error) alert(data.error);
+    else {
+      alert(data.win? `ربحت! x${data.multiplier}` : 'خسرت');
+      document.querySelector('.footer div:last-child').textContent = `كمية الكرستال: ${data.crystals} 💎`;
+    }
+  }
+});
+
+setInterval(() => {
+  timer--;
+  if(timer < 0) timer = 31;
+  document.getElementById('timer').textContent = timer + 's';
+}, 1000);
+
+fetch('/api/crystals').then(r=>r.json()).then(d=>{
+  document.querySelector('.footer div:last-child').textContent = `كمية الكرستال: ${d.crystals} 💎`;
+});
+</script>
