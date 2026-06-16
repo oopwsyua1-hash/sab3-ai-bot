@@ -2,73 +2,49 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة الكونزات</title>
     <style>
         body { 
-            background-color: #0b2e13; 
-            color: white; 
-            text-align: center; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
+            background: linear-gradient(to bottom, #063a1a, #0b2e13); 
+            color: white; font-family: sans-serif; text-align: center; margin: 0;
         }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            border-radius: 15px;
-        }
-        .timer-box {
-            font-size: 70px;
-            font-weight: bold;
-            color: #ffeb3b;
-            text-shadow: 2px 2px 10px #000;
-            margin: 20px 0;
-        }
-        .result-box {
-            font-size: 22px;
-            padding: 15px;
-            background: #1a5a28;
-            border-radius: 10px;
-        }
-        .loading { color: #888; font-style: italic; }
+        .header { padding: 10px; font-size: 18px; }
+        .timer-box { font-size: 60px; font-weight: bold; color: #ffeb3b; margin: 20px 0; }
+        
+        /* توزيع الفرق بشكل دائري بسيط */
+        .teams-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 20px; }
+        .team-btn { background: #1a5a28; border: 2px solid #2e7d32; padding: 10px; border-radius: 10px; cursor: pointer; }
+        
+        /* شريط الكونزات */
+        .coins-bar { display: flex; justify-content: center; gap: 10px; padding: 20px; overflow-x: auto; }
+        .coin-btn { background: #2e7d32; padding: 15px; border-radius: 5px; cursor: pointer; border: none; color: white; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>جولة المراهنات اليومية</h1>
-    <div class="timer-box" id="timer">--</div>
-    <div class="result-box" id="result">جاري تحميل البيانات...</div>
+<div class="header">الجولة 1583 لليوم</div>
+<div class="timer-box" id="timer">31s</div>
+
+<div class="teams-grid" id="teams">
+    <button class="team-btn" onclick="bet('Juve')">Juve<br>x4</button>
+    <button class="team-btn" onclick="bet('Real')">Real<br>x40</button>
+    <button class="team-btn" onclick="bet('Barca')">Barca<br>x40</button>
+</div>
+
+<div class="coins-bar">
+    <button class="coin-btn" onclick="selectCoin(10000)">10000</button>
+    <button class="coin-btn" onclick="selectCoin(50000)">50000</button>
+    <button class="coin-btn" onclick="selectCoin(100000)">100000</button>
 </div>
 
 <script>
-    function updateGame() {
+    function updateTimer() {
         fetch('/game_data')
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
-                // تحديث التايمر
                 document.getElementById('timer').innerText = data.timer + "s";
-                
-                // تحديث النتيجة
-                if (data.last_result !== "None") {
-                    document.getElementById('result').innerText = "الفريق الفائز في الجولة السابقة: " + data.last_result;
-                } else {
-                    document.getElementById('result').innerText = "في انتظار بدء الجولة...";
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('result').innerText = "خطأ في الاتصال بالسيرفر";
             });
     }
-
-    // تحديث البيانات كل ثانية
-    setInterval(updateGame, 1000);
-    // استدعاء أولي
-    updateGame();
+    setInterval(updateTimer, 1000);
 </script>
 
 </body>
