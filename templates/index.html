@@ -1,1 +1,26 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game Web</title>
+    <style>
+        body { background-color: #0b2e13; color: white; text-align: center; font-family: sans-serif; }
+        .timer { font-size: 50px; margin-top: 50px; }
+    </style>
+</head>
+<body>
+    <h1>مرحباً بك في اللعبة</h1>
+    <div class="timer" id="timer">Loading...</div>
+    
+    <script>
+        // دالة لجلب البيانات من السيرفر
+        setInterval(() => {
+            fetch('/')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('timer').innerText = data.timer;
+                });
+        }, 1000);
+    </script>
+</body>
+</html>
