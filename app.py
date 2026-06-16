@@ -1,34 +1,44 @@
-<!-- واجهة الشحن -->
-<div id="charge-box">
-    <h3>شحن الكريستال - Bot al-Sabaa</h3>
-    <input type="text" id="playerId" placeholder="أدخل رمز المستخدم الخاص بك">
-    <input type="number" id="amount" placeholder="كمية الكريستال">
-    <button onclick="sendChargeRequest()">تأكيد الشحن</button>
-</div>
+from flask import Flask, request, jsonify
+import requests
+import os
 
-<script>
-function sendChargeRequest() {
-    const pId = document.getElementById('playerId').value;
-    const qty = document.getElementById('amount').value;
+app = Flask(__name__)
+
+# ضع هذه البيانات في إعدادات السيرفر (Environment Variables) لحمايتها
+BOT_TOKEN = os.environ.get('8819789633:AAGTOqR2p_Cxop3HP1XsnREgW3y7Ade1cQQ') # توكن البوت الخاص بك
+CHAT_ID = os.environ.get('8085880852')     # الآيدي الخاص بك في تليجرام
+
+@app.route('/')
+def home():
+    return "Bot Server is Running!"
+
+@app.route('/api/request', methods=['POST'])
+def handle_request():
+    data = request.json
+    action = data.get('action') # 'charge' أو 'withdraw'
+    player_id = data.get('playerId')
+    amount = data.get('amount')
     
-    // رابط السيرفر الخاص بك على Railway
-    const serverUrl = "https://your-app-name.up.railway.app/api/charge"; 
+    # تنسيق الرسالة التي ستصلك على تليجرام
+    message = (f"🔔 **طلب جديد في الساحرة المستديرة**\n"
+               f"👤 المعرف: `{player_id}`\n"
+               f"💰 العملية: {action.upper()}\n"
+               f"💵 القيمة: {amount}")
 
-    fetch(serverUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            playerId: pId,
-            amount: parseInt(qty),
-            secretKey: "YOUR_SECRET_KEY" // هذا المفتاح السري الذي وضعته في إعدادات السيرفر
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert("تم إرسال طلب الشحن بنجاح!");
-    })
-    .catch(error => {
-        alert("حدث خطأ، تأكد من اتصالك بالسيرفر");
-    });
-}
-</script>
+    # إرسال الطلب إلى تليجرام
+    telegram_url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    payload = {
+        'chat_id': CHAT_ID,
+        'text': message,
+        'parse_mode': 'Markdown'
+    }
+    
+    response = requests.post(telegram_url, data=payload)
+    
+    if response.status_code == 200:
+        return jsonify({"status": "success", "message": "تم إرسال طلبك للإدارة"})
+    else:
+        return jsonify({"status": "error", "message": "فشل الاتصال بالبوت"}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)
