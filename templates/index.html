@@ -1,42 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>توقعات المباريات</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family: Tahoma, sans-serif; }
+body {
+  background: #0a3d1f; /* أخضر غامق بدل الصورة */
+  color: #fff;
+  min-height: 100vh;
+  padding: 20px;
+  text-align: center;
+}
+h2 { margin-bottom: 20px; color: #3cb371; }
+.timer { 
+  font-size: 60px; 
+  font-weight: bold; 
+  margin: 30px 0;
+  color: #ffeb3b;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin: 40px 0;
+}
+.team {
+  background: #2e8b57;
+  border: 2px solid #3cb371;
+  border-radius: 12px;
+  padding: 15px 5px;
+  cursor: pointer;
+}
+.team.selected {
+  border-color: #ffeb3b;
+  box-shadow: 0 0 15px #ffeb3b;
+}
+.team img { width: 50px; height: 50px; }
+.mult { margin-top: 5px; font-weight: bold; }
+.bet-btn {
+  background: #3cb371;
+  padding: 12px 20px;
+  border-radius: 10px;
+  margin: 5px;
+  display: inline-block;
+  cursor: pointer;
+  font-weight: bold;
+}
+.footer {
+  margin-top: 40px;
+  font-size: 18px;
+}
+</style>
+</head>
+<body>
+<h2>الهواة - الجولة 1583</h2>
+<div>متبقي على الاختيار</div>
+<div class="timer" id="timer">31s</div>
+
+<div class="grid">
+  <div class="team" data-team="Arsenal">
+    <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg">
+    <div class="mult">x40</div>
+  </div>
+  <div class="team" data-team="Barcelona">
+    <img src="https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona.svg">
+    <div class="mult">x40</div>
+  </div>
+  <div class="team" data-team="PSG">
+    <img src="https://upload.wikimedia.org/wikipedia/en/a7/Paris_Saint-Germain_F.C..svg">
+    <div class="mult">x12</div>
+  </div>
+</div>
+
+<div>
+  <div class="bet-btn" data-amount="10000">10000</div>
+  <div class="bet-btn" data-amount="20000">20000</div>
+  <div class="bet-btn" data-amount="50000">50000</div>
+</div>
+
+<div class="footer">الكرستال: <span id="crystals">0</span> 💎</div>
+
 <script>
 let selectedTeam = null;
 let timer = 31;
 
+// اختيار الفريق
 document.querySelectorAll('.team').forEach(t => {
   t.onclick = () => {
     document.querySelectorAll('.team').forEach(x => x.classList.remove('selected'));
     t.classList.add('selected');
-    selectedTeam = t.querySelector('img').alt || 'team';
+    selectedTeam = t.dataset.team;
   }
 });
 
+// الرهان
 document.querySelectorAll('.bet-btn').forEach(btn => {
   btn.onclick = async () => {
     if(!selectedTeam) return alert('اختار فريق أول');
-    let amount = parseInt(btn.textContent.replace(/\D/g,''));
-
+    let amount = btn.dataset.amount;
+    
     let res = await fetch('/api/bet', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({team: selectedTeam, amount})
     });
     let data = await res.json();
-
-    if(data.error) alert(data.error);
-    else {
-      alert(data.win? `ربحت! x${data.multiplier}` : 'خسرت');
-      document.querySelector('.footer div:last-child').textContent = `كمية الكرستال: ${data.crystals} 💎`;
-    }
+    
+    alert(data.win? `ربحت! x${data.multiplier}` : 'خسرت');
+    document.getElementById('crystals').textContent = data.crystals;
   }
 });
 
+// التايمر
 setInterval(() => {
-  timer--;
-  if(timer < 0) timer = 31;
+  timer--; if(timer < 0) timer = 31;
   document.getElementById('timer').textContent = timer + 's';
 }, 1000);
 
+// جلب الكرستال
 fetch('/api/crystals').then(r=>r.json()).then(d=>{
-  document.querySelector('.footer div:last-child').textContent = `كمية الكرستال: ${d.crystals} 💎`;
+  document.getElementById('crystals').textContent = d.crystals;
 });
 </script>
+</body>
+</html>
