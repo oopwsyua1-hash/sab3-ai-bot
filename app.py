@@ -1,46 +1,46 @@
 from flask import Flask, render_template, jsonify, request
-import threading
-import time
-import random
+import threading, time, random, sqlite3
 
 app = Flask(__name__)
 
-# إعدادات اللعبة
-game_state = {
-    "timer": 31,
-    "last_result": None,
-    "odds": {"Juve": 4, "Real": 40, "Barca": 40, "Liverpool": 12, "PSG": 12, "Milan": 6, "Bayern": 6, "ManU": 4}
-}
+# إنشاء قاعدة بيانات حقيقية للعبة
+def init_db():
+    conn = sqlite3.connect('game.db')
+    c = conn.cursor()
+    c.execute('CREATE TABLE IF NOT EXISTS game (id INTEGER PRIMARY KEY, balance INTEGER)')
+    c.execute('INSERT OR IGNORE INTO game (id, balance) VALUES (1, 1000000)')
+    conn.commit()
+    conn.close()
 
-def game_loop():
+init_db()
+
+game_state = {"timer": 31, "last_result": "None", "is_active": True}
+
+def game_engine():
     while True:
         if game_state["timer"] > 0:
             time.sleep(1)
             game_state["timer"] -= 1
         else:
-            # انتهاء الجولة - اختيار فائز عشوائي
-            game_state["last_result"] = random.choice(list(game_state["odds"].keys()))
-            time.sleep(3)
+            teams = ["ريال", "برشلونة", "باريس", "ليفربول", "ميلان", "بايرن", "يوفنتوس", "يونايتد"]
+            game_state["last_result"] = random.choice(teams)
+            time.sleep(5)
             game_state["timer"] = 31
 
-threading.Thread(target=game_loop, daemon=True).start()
+threading.Thread(target=game_engine, daemon=True).start()
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/game_data')
-def get_data():
+@app.route('/data')
+def data():
     return jsonify(game_state)
 
-# معالجة الرهان
-@app.route('/place_bet', methods=['POST'])
-def place_bet():
+@app.route('/bet', methods=['POST'])
+def bet():
     data = request.json
-    team = data.get('team')
-    amount = int(data.get('amount'))
-    # هنا يجب ربط هذا بقاعدة بيانات المستخدمين
-    return jsonify({"status": "success", "message": f"تم الرهان بـ {amount} على {team}"})
+    return jsonify({"status": "تم تأكيد الرهان", "team": data['team']})
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000)
