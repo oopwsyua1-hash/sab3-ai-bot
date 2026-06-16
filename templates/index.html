@@ -1,26 +1,75 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="ar" dir="rtl">
 <head>
-    <title>Game Web</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة الكونزات</title>
     <style>
-        body { background-color: #0b2e13; color: white; text-align: center; font-family: sans-serif; }
-        .timer { font-size: 50px; margin-top: 50px; }
+        body { 
+            background-color: #0b2e13; 
+            color: white; 
+            text-align: center; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+        }
+        .timer-box {
+            font-size: 70px;
+            font-weight: bold;
+            color: #ffeb3b;
+            text-shadow: 2px 2px 10px #000;
+            margin: 20px 0;
+        }
+        .result-box {
+            font-size: 22px;
+            padding: 15px;
+            background: #1a5a28;
+            border-radius: 10px;
+        }
+        .loading { color: #888; font-style: italic; }
     </style>
 </head>
 <body>
-    <h1>مرحباً بك في اللعبة</h1>
-    <div class="timer" id="timer">Loading...</div>
-    
-    <script>
-        // دالة لجلب البيانات من السيرفر
-        setInterval(() => {
-            fetch('/')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('timer').innerText = data.timer;
-                });
-        }, 1000);
-    </script>
+
+<div class="container">
+    <h1>جولة المراهنات اليومية</h1>
+    <div class="timer-box" id="timer">--</div>
+    <div class="result-box" id="result">جاري تحميل البيانات...</div>
+</div>
+
+<script>
+    function updateGame() {
+        fetch('/game_data')
+            .then(response => response.json())
+            .then(data => {
+                // تحديث التايمر
+                document.getElementById('timer').innerText = data.timer + "s";
+                
+                // تحديث النتيجة
+                if (data.last_result !== "None") {
+                    document.getElementById('result').innerText = "الفريق الفائز في الجولة السابقة: " + data.last_result;
+                } else {
+                    document.getElementById('result').innerText = "في انتظار بدء الجولة...";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = "خطأ في الاتصال بالسيرفر";
+            });
+    }
+
+    // تحديث البيانات كل ثانية
+    setInterval(updateGame, 1000);
+    // استدعاء أولي
+    updateGame();
+</script>
+
 </body>
 </html>
