@@ -3,126 +3,168 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>توقعات المباريات</title>
+<title>الهواة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; font-family: Tahoma, sans-serif; }
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo', sans-serif; }
 body {
-  background: #0a3d1f; /* أخضر غامق بدل الصورة */
-  color: #fff;
-  min-height: 100vh;
-  padding: 20px;
-  text-align: center;
+  background: url('/static/bg.jpg') no-repeat center/cover fixed;
+  color:#fff;
+  height:100vh;
+  overflow:hidden;
 }
-h2 { margin-bottom: 20px; color: #3cb371; }
-.timer { 
-  font-size: 60px; 
-  font-weight: bold; 
-  margin: 30px 0;
-  color: #ffeb3b;
+.container {
+  background: rgba(0,30,15,0.7);
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding-top:20px;
+}
+.tabs {
+  display:flex; gap:25px; color:#aaa; font-size:14px; margin-bottom:5px;
+}
+.tab.active {
+  background: linear-gradient(180deg, #4caf50, #2e7d32);
+  padding:6px 18px; border-radius:20px; color:#fff;
+}
+.round { font-size:13px; margin-bottom:15px; }
+.center {
+  text-align:center; margin:20px 0 40px;
+}
+.timer {
+  font-size:70px; font-weight:700; color:#e8f5e9;
+  text-shadow:0 0 20px #4caf50;
 }
 .grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin: 40px 0;
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:18px;
+  width:90%;
+  max-width:500px;
 }
 .team {
-  background: #2e8b57;
-  border: 2px solid #3cb371;
-  border-radius: 12px;
-  padding: 15px 5px;
-  cursor: pointer;
+  background: linear-gradient(180deg, #388e3c, #1b5e20);
+  border:2px solid #66bb6a;
+  border-radius:15px;
+  padding:8px 4px;
+  text-align:center;
+  position:relative;
+  cursor:pointer;
+  transition:0.2s;
 }
 .team.selected {
-  border-color: #ffeb3b;
-  box-shadow: 0 0 15px #ffeb3b;
+  box-shadow:0 0 25px #ffeb3b;
+  border-color:#ffeb3b;
+  transform:scale(1.05);
 }
-.team img { width: 50px; height: 50px; }
-.mult { margin-top: 5px; font-weight: bold; }
-.bet-btn {
-  background: #3cb371;
-  padding: 12px 20px;
-  border-radius: 10px;
-  margin: 5px;
-  display: inline-block;
-  cursor: pointer;
-  font-weight: bold;
+.team img { width:55px; height:55px; }
+.mult {
+  background:#0d3b14;
+  padding:3px 8px;
+  border-radius:8px;
+  font-size:13px;
+  margin-top:4px;
+  display:inline-block;
+  font-weight:bold;
+}
+.bet-bar {
+  position:absolute;
+  bottom:80px;
+  display:flex;
+  gap:8px;
+  padding:0 10px;
+  overflow-x:auto;
+}
+.ticket {
+  background: linear-gradient(180deg, #43a047, #2e7d32);
+  border-radius:12px;
+  padding:12px 20px;
+  min-width:90px;
+  text-align:center;
+  font-weight:bold;
+  font-size:16px;
+  cursor:pointer;
+  border:2px solid #66bb6a;
 }
 .footer {
-  margin-top: 40px;
-  font-size: 18px;
+  position:absolute;
+  bottom:15px;
+  width:95%;
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
 }
 </style>
 </head>
 <body>
-<h2>الهواة - الجولة 1583</h2>
-<div>متبقي على الاختيار</div>
-<div class="timer" id="timer">31s</div>
+<div class="container">
+  <div class="tabs">
+    <div>كأس العالم</div>
+    <div>المحترفين</div>
+    <div class="tab active">الهواة</div>
+  </div>
+  <div class="round">الجولة 1583 لليوم</div>
 
-<div class="grid">
-  <div class="team" data-team="Arsenal">
-    <img src="https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg">
-    <div class="mult">x40</div>
+  <div class="center">
+    <div>متبقي على الإختيار</div>
+    <div class="timer" id="timer">31s</div>
   </div>
-  <div class="team" data-team="Barcelona">
-    <img src="https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona.svg">
-    <div class="mult">x40</div>
+
+  <div class="grid">
+    <div class="team" data-team="Real Madrid"><img src="/static/real.png"><div class="mult">x40</div></div>
+    <div class="team" data-team="Barcelona"><img src="/static/barca.png"><div class="mult">x40</div></div>
+    <div></div>
+    <div class="team" data-team="Liverpool"><img src="/static/liverpool.png"><div class="mult">x12</div></div>
+    <div class="team" data-team="PSG"><img src="/static/psg.png"><div class="mult">x12</div></div>
+    <div></div>
+    <div class="team" data-team="Bayern"><img src="/static/bayern.png"><div class="mult">x6</div></div>
+    <div class="team" data-team="Milan"><img src="/static/milan.png"><div class="mult">x6</div></div>
+    <div></div>
+    <div class="team selected" data-team="Juventus"><img src="/static/juve.png"><div class="mult">x4</div></div>
+    <div class="team" data-team="ManU"><img src="/static/manu.png"><div class="mult">x4</div></div>
   </div>
-  <div class="team" data-team="PSG">
-    <img src="https://upload.wikimedia.org/wikipedia/en/a7/Paris_Saint-Germain_F.C..svg">
-    <div class="mult">x12</div>
+
+  <div class="bet-bar">
+    <div class="ticket" data-amount="10000">10000</div>
+    <div class="ticket" data-amount="20000">20000</div>
+    <div class="ticket" data-amount="50000">50000</div>
+    <div class="ticket" data-amount="100000">100000</div>
+  </div>
+
+  <div class="footer">
+    <div>أرباح اليوم: 0 💎</div>
+    <div>كمية الكرستال: <span id="crystals">0</span> 💎</div>
   </div>
 </div>
-
-<div>
-  <div class="bet-btn" data-amount="10000">10000</div>
-  <div class="bet-btn" data-amount="20000">20000</div>
-  <div class="bet-btn" data-amount="50000">50000</div>
-</div>
-
-<div class="footer">الكرستال: <span id="crystals">0</span> 💎</div>
 
 <script>
-let selectedTeam = null;
+let selectedTeam = 'Juventus';
 let timer = 31;
 
-// اختيار الفريق
-document.querySelectorAll('.team').forEach(t => {
-  t.onclick = () => {
-    document.querySelectorAll('.team').forEach(x => x.classList.remove('selected'));
+document.querySelectorAll('.team').forEach(t=>{
+  t.onclick = ()=>{
+    document.querySelectorAll('.team').forEach(x=>x.classList.remove('selected'));
     t.classList.add('selected');
     selectedTeam = t.dataset.team;
   }
 });
 
-// الرهان
-document.querySelectorAll('.bet-btn').forEach(btn => {
-  btn.onclick = async () => {
-    if(!selectedTeam) return alert('اختار فريق أول');
+document.querySelectorAll('.ticket').forEach(btn=>{
+  btn.onclick = async ()=>{
     let amount = btn.dataset.amount;
-    
-    let res = await fetch('/api/bet', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({team: selectedTeam, amount})
-    });
+    let res = await fetch('/api/bet',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({team:selectedTeam,amount})});
     let data = await res.json();
-    
-    alert(data.win? `ربحت! x${data.multiplier}` : 'خسرت');
-    document.getElementById('crystals').textContent = data.crystals;
+    if(data.error) alert(data.error);
+    else {
+      alert(data.win? `ربحت! x${data.multiplier}` : 'حظ أوفر');
+      document.getElementById('crystals').textContent = data.crystals;
+    }
   }
 });
 
-// التايمر
-setInterval(() => {
-  timer--; if(timer < 0) timer = 31;
-  document.getElementById('timer').textContent = timer + 's';
-}, 1000);
-
-// جلب الكرستال
-fetch('/api/crystals').then(r=>r.json()).then(d=>{
-  document.getElementById('crystals').textContent = d.crystals;
-});
+setInterval(()=>{timer--; if(timer<0) timer=31; document.getElementById('timer').textContent=timer+'s';},1000);
+fetch('/api/crystals').then(r=>r.json()).then(d=>{document.getElementById('crystals').textContent=d.crystals});
 </script>
 </body>
 </html>
