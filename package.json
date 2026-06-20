@@ -1,7 +1,6 @@
 {
   "name": "sab3-ai-bot",
   "version": "1.0.0",
-  "description": "Bot Server",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
