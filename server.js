@@ -11,7 +11,7 @@ const ADMIN_LINK = "https://t.me/Qsui123";
 // أمر البداية مع القائمة الاحترافية
 bot.command('start', (ctx) => {
     ctx.reply('🚀 أهلاً بك في Bot al-Sabaa!\nاختر الخدمة المطلوبة:', Markup.inlineKeyboard([
-        [Markup.button.webApp('🎮 فتح اللعبة', 'https://sab3-ai-bot.onrender.com')],
+        [Markup.button.webApp('🎮 فتح اللعبة', 'https://seda-alhlde.lovable.app/')],
         [Markup.button.callback('📊 رصيدي', 'balance')],
         [Markup.button.callback('💰 شحن رصيد', 'charge')],
         [Markup.button.callback('💸 سحب أرباح', 'withdraw')],
