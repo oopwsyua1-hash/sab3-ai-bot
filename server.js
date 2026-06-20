@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 
 // الرابط الثابت للعبة والإدارة
-const GAME_URL = "https://seda-alhlde.lovable.app/";
+const GAME_URL = "https://lovable.dev/preview/IzX91e1HJYxfnB9X4pwAu2GNU1lghDXM";
 const ADMIN_LINK = "https://t.me/Qsui123";
 
 // أمر البداية (القائمة الرئيسية)
