@@ -1,34 +1,40 @@
 const { Telegraf } = require('telegraf');
 const express = require('express');
-const cors = require('cors');
 
-// إعداد البوت باستخدام التوكن من إعدادات Render
+// التأكد من وجود التوكن
+if (!process.env.BOT_TOKEN) {
+    console.error('Error: BOT_TOKEN is not defined in environment variables!');
+    process.exit(1);
+}
+
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const app = express();
 
-app.use(cors());
 app.use(express.json());
 
-// مسار للتحقق أن السيرفر يعمل
-app.get('/', (req, res) => {
-    res.send('Server is running and Bot is active!');
-});
+// مسار لاستقبال التنبيهات من لعبتك
+// الرابط سيكون: https://sab3-ai-bot.onrender.com/notify
+app.post('/notify', async (req, res) => {
+    const { msg } = req.body;
+    
+    if (!msg) {
+        return res.status(400).send('Message content is missing');
+    }
 
-// المسار الذي تستقبله اللعبة
-app.post('/webhook', async (req, res) => {
-    const { message } = req.body;
     try {
-        await bot.telegram.sendMessage(process.env.ADMIN_ID, `تنبيه من اللعبة: ${message}`);
-        res.status(200).json({ status: 'success' });
-    } catch (error) {
-        console.error('Error sending message:', error);
-        res.status(500).json({ status: 'error', message: error.message });
+        await bot.telegram.sendMessage(process.env.ADMIN_ID, `🤖 تنبيه من لعبة Bot al-Sabaa: \n\n${msg}`);
+        res.status(200).send('Message sent to Telegram!');
+    } catch (e) {
+        console.error('Telegram Error:', e);
+        res.status(500).send('Failed to send message');
     }
 });
 
-// تشغيل البوت والسيرفر
-bot.launch();
+// تشغيل البوت
+bot.launch()
+    .then(() => console.log('Bot is running...'))
+    .catch(err => console.error('Bot launch error:', err));
+
+// تشغيل السيرفر
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
