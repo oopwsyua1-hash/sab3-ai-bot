@@ -322,6 +322,20 @@ body.roulette-phase-active{pointer-events:none!important}
 </div>
 
 <script>
+    // هذا الكود يربط اللعبة بسيرفر التيرمكس الخاص بك
+async function sendToTermux(data) {
+    try {
+        const response = await fetch('http://localhost:3000/data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        console.log('تم إرسال البيانات للسيرفر بنجاح');
+    } catch (error) {
+        console.error('خطأ في الاتصال بالسيرفر:', error);
+    }
+}
+
 // Anti-Cheat: TimeGuard System
 const TimeGuard=(()=>{const BAN_DURATION=10*60*1000;const KEY_BAN='banned_until';let lastTime=Date.now();const check=()=>{const now=Date.now();const bannedUntil=localStorage.getItem(KEY_BAN);if(bannedUntil&&now<parseInt(bannedUntil)){showBanOverlay(parseInt(bannedUntil));return}if(Math.abs(now-lastTime)>20000){ }lastTime=now;requestAnimationFrame(check)};const punish=()=>{const until=Date.now()+BAN_DURATION;localStorage.setItem(KEY_BAN,until);localStorage.setItem('clBet_secureBal_v88_psy',0);localStorage.setItem('clBet_vault_v1',0);showBanOverlay(until)};const showBanOverlay=(until)=>{const ov=document.getElementById('banned-overlay');const timer=document.getElementById('ban-timer');ov.classList.add('active');setInterval(()=>{const left=Math.ceil((until-Date.now())/1000);if(left<=0){localStorage.removeItem(KEY_BAN);location.reload()}else{const m=Math.floor(left/60);const s=left%60;timer.textContent=`${m}:${s<10?'0':''}${s}`}},1000)};return{init:()=>{setInterval(()=>{if(document.visibilityState==='visible'){const now=Date.now();if(now<lastTime-5000){punish()}lastTime=now}},1000);check()}}})();TimeGuard.init();
 
